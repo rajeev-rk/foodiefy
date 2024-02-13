@@ -10,7 +10,7 @@ const initialState = {
                 "Full": 150
             },
             "mrp": 120,
-            "image": "images/mushroom.jpeg",
+            "image": "/banner/bannerImg_2.jpg",
             "category": "Main Course",
             "description": "A flavorful combination of mushrooms and green peas cooked in a rich gravy.",
             "rating": 4.4,
@@ -24,7 +24,7 @@ const initialState = {
                 "Full": 130
             },
             "mrp": 120,
-            "image": "images/dalmakhani.jpeg",
+            "image": "/banner/bannerImg_2.jpg",
             "category": "Main Course",
             "description": "Creamy and flavorful lentil curry slow-cooked with spices and cream.",
             "rating": 4.5,
@@ -75,6 +75,12 @@ export const selectAllCategories = state => {
         return acc;
     }, []);
     return categories;
+};
+
+export const selectAllUniqueCategories = state => {
+    const allItems = selectAllItems(state);
+    const uniqueCategories = [...new Set(allItems.map(item => item.category))];
+    return uniqueCategories;
 };
 
 export default productsSlice.reducer;

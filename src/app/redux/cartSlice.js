@@ -13,9 +13,38 @@ const cartSlice = createSlice({
       const newItem = action.payload;
       const existingItem = state.items.find(item => item.id === newItem.id);
       if (existingItem) {
-        existingItem.quantity += newItem.quantity;
+        console.log("🚀 ~ addItemToCart ~ existingItem:", existingItem)
+        console.log("🚀 ~ addItemToCart ~ newItem:", newItem)
+        existingItem.quantity += 1;
       } else {
-        state.items.push(newItem);
+        state.items.push({ ...newItem, quantity: 1 });
+      }
+    },
+    isAlreadyInCart(state, action) {
+      console.log("🚀 ~ isAlreadyInCart ~ state:", state)
+      const itemId = action.payload.id;
+      const items = state.items || []
+      console.log("🚀 ~ isAlreadyInCart ~ state.items:", state.items)
+      console.log("🚀 ~ isAlreadyInCart ~ itemId:", itemId)
+      const isInCart = items.some(item => item.id === itemId);
+      console.log("🚀 ~ isAlreadyInCart ~ isInCart:", isInCart)
+      return isInCart;
+    },
+    increaseItemQuantity(state, action) {
+      const itemId = action.payload.id;
+      const cartItem = state.items.find(item => item.id === itemId);
+      if (cartItem) {
+        cartItem.quantity += 1;
+      }
+    },
+
+    decreaseItemQuantity(state, action) {
+      const itemId = action.payload.id;
+      const cartItem = state.items.find(item => item.id === itemId);
+      if (cartItem && cartItem.quantity > 1) {
+        cartItem.quantity -= 1;
+      } else {
+        state.items = state.items.filter(item => item.id !== itemId);
       }
     },
     removeItemFromCart(state, action) {
@@ -39,7 +68,7 @@ const cartSlice = createSlice({
     applyDiscount(state, action) {
       const discountAmount = action.payload;
       state.items.forEach(item => {
-        item.price -= discountAmount; 
+        item.price -= discountAmount;
       });
     },
     setShippingInfo(state, action) {
@@ -56,6 +85,9 @@ export const {
   clearItemFromCart,
   applyDiscount,
   setShippingInfo,
+  isAlreadyInCart,
+  increaseItemQuantity,
+  decreaseItemQuantity
 } = cartSlice.actions;
 
 export const selectCartItems = state => state.cart.items;
